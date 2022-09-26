@@ -5,6 +5,7 @@ from random import randrange
 #read CSV file (dataset)
 from csv import reader
 import pandas as pd
+import subprocess
 import numpy as np
 from math import sqrt
 from sklearn.ensemble import RandomForestClassifier
@@ -288,12 +289,15 @@ def random_forest(train, test, max_depth, min_size, sample_size, n_trees, n_feat
         trees.append(tree)
     predictions = [bagging_predict(trees, row) for row in test]
     return(predictions)
- 
+
+def configure_git_path():
+    return subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode("utf-8").strip()
 # Test the random forest algorithm
 seed(1)
 # load and prepare data
-filename = '/home/meet/PycharmProjects/A5/seq_positive_training.csv'
-filename2 = '/home/meet/PycharmProjects/A5/seq_negative_training.csv'
+git_path = configure_git_path()
+filename = git_path + '/seq_positive_training.csv'
+filename2 = git_path + '/seq_negative_training.csv'
 
 dat = load_csv(filename)
 dat2=load_csv(filename2)
@@ -306,7 +310,7 @@ dp=merge(dat,dat2)
 df=pd.DataFrame(dp)
 print(np.array(df))
 
-filename = "/home/meet/PycharmProjects/A5/kmer_positive_training.csv"
+filename = git_path + "/kmer_positive_training.csv"
 dataset = load_csv(filename)
 """"
 n_folds = 5

@@ -1,5 +1,11 @@
 import pandas as pd
 from csv import reader
+import subprocess
+
+def configure_git_path():
+    return subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode("utf-8").strip()
+
+git_root = configure_git_path()
 
 def  load_csv(filename):
     dataset=list()
@@ -11,7 +17,7 @@ def  load_csv(filename):
             dataset.append(row)
     return dataset
 
-dataset=load_csv("/home/meet/PycharmProjects/A5/seq_positive_training.csv")
+dataset=load_csv(git_root + "/seq_positive_training.csv")
 
 
 def stringToint(dataset):

@@ -4,6 +4,13 @@ import sklearn as sk
 from sklearn.model_selection import train_test_split
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
+import subprocess
+
+def configure_git_path():
+    return subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode("utf-8").strip()
+
+git_path = configure_git_path()
+
 def giveMax(set):
     temp=set[0]
     for i in range(len(set)):
@@ -80,9 +87,9 @@ def writeTofile(data,flag):
 
 def seq_row_input():
 
-    dataset = pd.read_csv("/home/meet/PycharmProjects/A5/seq_positive_training.csv", header=None)
-    dataset1 = pd.read_csv("/home/meet/PycharmProjects/A5/seq_negative_training.csv", header=None)
-    test=pd.read_csv("/home/meet/PycharmProjects/A5/seq_test.csv",header=None)
+    dataset = pd.read_csv(git_path+"/seq_positive_training.csv", header=None)
+    dataset1 = pd.read_csv(git_path+"/seq_negative_training.csv", header=None)
+    test=pd.read_csv(git_path+"/seq_test.csv",header=None)
 
     dataset[4]=1
     dataset1[4]=0
@@ -110,11 +117,11 @@ def seq_row_input():
     (db,Y,test,'s')
 
 def kmer_input():
-    dataset=pd.read_csv("/home/meet/PycharmProjects/A5/kmer_positive_training.csv",header=None)
-    dataset1=pd.read_csv("/home/meet/PycharmProjects/A5/kmer_negative_training.csv",header=None)
+    dataset=pd.read_csv(git_path+"/kmer_positive_training.csv",header=None)
+    dataset1=pd.read_csv(git_path+"/kmer_negative_training.csv",header=None)
     #print(dataset)
     #print(dataset1)
-    kmer=pd.read_csv("/home/meet/PycharmProjects/A5/kmer_test.csv",header=None)
+    kmer=pd.read_csv(git_path+"/kmer_test.csv",header=None)
     kmer=kmer.values
     data=pd.concat([dataset,dataset1],sort=True,ignore_index=True)
     data=data.values
@@ -123,20 +130,14 @@ def kmer_input():
     print(len(kmer_target))
     trainAndTest(data,kmer_target,kmer,'k')
 
-
-
 def deepbind():
 
-    with open("/home/meet/PycharmProjects/A5/deepbind_negative_training.csv",'r')  as file:
+    with open(git_path+"/deepbind_negative_training.csv",'r')  as file:
         data=file.read()
     data=data.split("\n")
-    with open("/home/meet/PycharmProjects/A5/deepbind_positive_training.csv",'r') as file:
+    with open(git_path+"/deepbind_positive_training.csv",'r') as file:
         data1=file.read()
     data1=data1.split("\n")
-
-
-
-
 
 def trainAndTest(X,Y,test,flag):
 
@@ -145,13 +146,4 @@ def trainAndTest(X,Y,test,flag):
     classifier=classifier.fit(X,Y)
     predection=classifier.predict(test)
     writeTofile(predection,flag)
-
-
-
-
-
-
-
-
-
 kmer_input()
